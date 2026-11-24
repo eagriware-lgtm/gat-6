@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GAT 6 — Coastline</title>
+<style>
+:root{color-scheme:dark;--cyan:#55e6df;--gold:#ffd166}*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07131d;font-family:Inter,system-ui,Arial;color:#fff}
+#game{position:fixed;inset:0}canvas{display:block}
+.panel{background:linear-gradient(145deg,rgba(7,19,29,.88),rgba(10,32,43,.65));border:1px solid rgba(135,225,230,.25);box-shadow:0 12px 40px #0005;backdrop-filter:blur(12px);border-radius:14px}
+#brand{position:absolute;top:22px;left:24px;padding:12px 16px;letter-spacing:.16em;font-weight:900;font-size:18px}#brand span{color:var(--cyan)}
+#mission{position:absolute;top:22px;right:24px;width:260px;padding:15px 17px}small{color:#9db9c4;letter-spacing:.13em;font-size:10px;font-weight:800}#mission h3{margin:6px 0;font-size:15px}#mission p{margin:0;color:#b8cbd2;font-size:12px;line-height:1.5}
+#hud{position:absolute;left:24px;bottom:22px;padding:13px 16px;min-width:170px}#speed{font-size:32px;font-weight:900;line-height:1}#speed em{font-style:normal;font-size:11px;color:#9db9c4;letter-spacing:.12em}
+#help{position:absolute;bottom:22px;right:24px;padding:12px 15px;color:#b8cbd2;font-size:11px;line-height:1.8;text-align:right}
+kbd{border:1px solid #72929c;border-radius:5px;padding:2px 5px;color:#fff;background:#142b36}
+#toast{position:absolute;left:50%;top:24%;transform:translate(-50%,-10px);opacity:0;transition:.3s;padding:12px 18px;font-size:13px;letter-spacing:.04em}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#intro{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(90deg,rgba(3,12,20,.9),rgba(3,12,20,.25)),linear-gradient(0deg,rgba(3,12,20,.65),transparent 65%);transition:opacity .7s}
+#intro.hide{opacity:0;pointer-events:none}.introbox{width:min(520px,calc(100% - 40px));padding:30px}.eyebrow{color:var(--cyan);letter-spacing:.25em;font-size:11px;font-weight:900}.introbox h1{font-size:clamp(42px,8vw,76px);line-height:.9;margin:14px 0 12px;letter-spacing:-.07em}.introbox h1 span{color:var(--cyan)}.introbox p{color:#b4c8d0;line-height:1.65;font-size:14px}.introbox button{border:0;border-radius:8px;background:var(--cyan);color:#062027;font-weight:900;letter-spacing:.1em;padding:14px 22px;margin-top:12px;cursor:pointer}.introbox button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+#map{position:absolute;right:24px;bottom:128px;width:118px;height:118px;border-radius:50%;border:1px solid #8cd8d888;background:#07131dcc}
+@media(max-width:650px){#mission{top:84px;right:12px;width:190px}#brand{top:12px;left:12px}#hud{left:12px;bottom:12px}#help{right:12px;bottom:12px;font-size:9px}#map{right:12px;bottom:120px;width:90px;height:90px}}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="brand" class="panel">GAT <span>6</span> <small style="display:block;margin-top:3px">COASTLINE • OPEN WORLD</small></div>
+<div id="mission" class="panel"><small>ACTIVE OBJECTIVE</small><h3 id="missionTitle">First Contact</h3><p id="missionText">Find the turquoise marker near the marina.</p></div>
+<div id="hud" class="panel"><small>VEHICLE SPEED</small><div id="speed">000 <em>KM/H</em></div></div>
+<canvas id="map" width="236" height="236"></canvas>
+<div id="help" class="panel"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Drive / Walk<br><kbd>SHIFT</kbd> Boost · <kbd>E</kbd> Enter / Exit<br>Drag mouse to look around</div>
+<div id="toast" class="panel">CHECKPOINT REACHED</div>
+<div id="intro"><div class="introbox panel"><div class="eyebrow">A NEW CITY IS WAITING</div><h1>GAT <span>6</span></h1><p>Welcome to Coastline — a sunlit city of ocean roads, palm-lined streets and hidden places. Explore at your own pace, find the marina and take your first ride.</p><button id="start">ENTER COASTLINE ↗</button><p style="font-size:11px;margin-top:18px">A fan-made original browser game prototype. Not affiliated with Rockstar Games.</p></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const mount=document.querySelector('#game'),scene=new THREE.Scene();scene.background=new THREE.Color(0x9bd4df);scene.fog=new THREE.Fog(0x9bd4df,85,250);
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,500);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;mount.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xdaf7ff,0x52616a,2));
+const sun=new THREE.DirectionalLight(0xffe2b0,2.2);sun.position.set(-45,70,35);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-90;sun.shadow.camera.right=90;sun.shadow.camera.top=90;sun.shadow.camera.bottom=-90;scene.add(sun);
+const mat=(c,r=.85)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
+const sand=mat(0xd8c49b),road=mat(0x303b43),side=mat(0xc8c4b6),grass=mat(0x4d8c72),water= new THREE.MeshStandardMaterial({color:0x238da5,roughness:.28,metalness:.15}),white=mat(0xf4e7cd),dark=mat(0x17252d);
+function box(w,h,d,m,x,y,z){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(500,500),grass);ground.rotation.x=-Math.PI/2;ground.position.y=-.16;ground.receiveShadow=true;scene.add(ground);
+const sea=new THREE.Mesh(new THREE.PlaneGeometry(500,120),water);sea.rotation.x=-Math.PI/2;sea.position.set(0,-.08,-170);scene.add(sea);
+box(500,.25,14,sand,0,-.02,-106);
+for(let z=-90;z<=70;z+=40){box(180,.12,13,road,0,.01,z);box(180,.13,1,side,0,.08,z+7);box(180,.13,1,side,0,.08,z-7);for(let x=-85;x<85;x+=12)box(5,.025,.18,white,x,.09,z)}
+for(let x=-80;x<=80;x+=40){box(12,.12,180,road,x,.015,-10);box(1,.13,180,side,x+6,.08,-10);box(1,.13,180,side,x-6,.08,-10);for(let z=-92;z<75;z+=12)box(.18,.025,5,white,x,.09,z)}
+const buildingMats=[0xe8b98c,0xd9d6c7,0x91b8ba,0xe2a98c,0xb2c5bd,0xe7d4a7].map(c=>mat(c));
+for(let x=-90;x<=90;x+=20){for(let z=-86;z<=65;z+=22){if(Math.abs(x)<17&&Math.abs(z)<17)continue;if(z<-65)continue;const w=10+Math.random()*5,d=10+Math.random()*5,h=9+Math.random()*24;const b=box(w,h,d,buildingMats[Math.floor(Math.random()*buildingMats.length)],x,h/2,z);b.userData.building=true;box(w+.3,.5,d+.3,mat(0xe9e1d2),x,h+.25,z);for(let yy=3;yy<h-1;yy+=3){for(let xx=-w/2+1;xx<w/2-1;xx+=2.6){const win=new THREE.Mesh(new THREE.BoxGeometry(1.2,1.25,.12),mat(0x6b9ba5,.35));win.position.set(x+xx,yy,z+d/2+.07);scene.add(win)}}}}
+function palm(x,z){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.28,.48,7,7),mat(0x8c6744));trunk.position.set(x,3.5,z);trunk.rotation.z=-.12;scene.add(trunk);for(let i=0;i<7;i++){const leaf=new THREE.Mesh(new THREE.ConeGeometry(.65,5,5),mat(0x27795c));leaf.position.set(x+Math.cos(i*Math.PI/3.5)*1.8,7.1,z+Math.sin(i*Math.PI/3.5)*1.8);leaf.rotation.z=-Math.cos(i*Math.PI/3.5)*.9;leaf.rotation.x=Math.sin(i*Math.PI/3.5)*.9;scene.add(leaf)}}
+for(let z=-100;z<85;z+=18){palm(-10,z);palm(10,z)}for(let x=-80;x<90;x+=20)palm(x,-98);
+const car=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(2.2,.72,4),mat(0x12a7a4,.35));body.position.y=.8;body.castShadow=true;car.add(body);const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.65,.72,1.9),mat(0x1c3c4b,.25));cabin.position.set(0,1.45,-.25);car.add(cabin);const hood=new THREE.Mesh(new THREE.BoxGeometry(1.8,.18,1.1),mat(0x25c3bd,.3));hood.position.set(0,1.18,1.15);car.add(hood);
+for(const x of [-1.12,1.12])for(const z of [-1.3,1.3]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,.25,16),dark);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.48,z);car.add(wheel)}
+car.position.set(3,0,10);scene.add(car);
+const player=new THREE.Group();const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.38,.85,4,8),mat(0xf2c36d));torso.position.y=1;player.add(torso);const head=new THREE.Mesh(new THREE.SphereGeometry(.28,12,12),mat(0x8d5e45));head.position.y=1.75;player.add(head);player.position.set(0,0,10);scene.add(player);
+const marker=new THREE.Group();const ring=new THREE.Mesh(new THREE.TorusGeometry(2.3,.18,10,40),mat(0x55e6df,.3));ring.rotation.x=Math.PI/2;ring.position.y=.25;marker.add(ring);const beam=new THREE.Mesh(new THREE.CylinderGeometry(.12,.8,5,20,true),new THREE.MeshBasicMaterial({color:0x55e6df,transparent:true,opacity:.15,side:THREE.DoubleSide}));beam.position.y=2.5;marker.add(beam);marker.position.set(0,0,-48);scene.add(marker);
+let driving=false,started=false,yaw=0,camYaw=0,camPitch=.22,speed=0,missionDone=false;const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(['w','a','s','d',' '].includes(e.key.toLowerCase()))e.preventDefault();if(e.key.toLowerCase()==='e'&&started)toggleVehicle()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+function toggleVehicle(){if(!driving&&player.position.distanceTo(car.position)<5){driving=true;player.visible=false;toast('VEHICLE ENTERED')}else if(driving){driving=false;player.visible=true;player.position.copy(car.position).add(new THREE.Vector3(2,0,0));toast('ON FOOT')}}
+let dragging=false,lastX=0,lastY=0;renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;camYaw-=(e.clientX-lastX)*.005;camPitch=THREE.MathUtils.clamp(camPitch+(e.clientY-lastY)*.003,-.05,.8);lastX=e.clientX;lastY=e.clientY});
+function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+document.querySelector('#start').onclick=()=>{started=true;document.querySelector('#intro').classList.add('hide');toast('WELCOME TO COASTLINE')};
+const clock=new THREE.Clock(),v=new THREE.Vector3();
+function updateMap(){const c=document.querySelector('#map').getContext('2d');c.clearRect(0,0,236,236);c.fillStyle='#0b2936';c.fillRect(0,0,236,236);c.strokeStyle='#718d91';c.lineWidth=5;for(let i=28;i<236;i+=48){c.beginPath();c.moveTo(i,0);c.lineTo(i,236);c.stroke();c.beginPath();c.moveTo(0,i);c.lineTo(236,i);c.stroke()}c.fillStyle='#238da5';c.fillRect(0,0,236,18);c.fillStyle='#55e6df';c.beginPath();c.arc(118+(driving?car.position.x:player.position.x)*.7,118+(driving?car.position.z:player.position.z)*.7,5,0,Math.PI*2);c.fill();c.fillStyle='#ffd166';c.beginPath();c.arc(118,118-58,5,0,Math.PI*2);c.fill()}
+function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.04);const target=driving?car:player;const forward=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));if(started){if(driving){if(keys.w)speed=Math.min(speed+(keys.shift?26:15)*dt,keys.shift?36:22);else if(keys.s)speed=Math.max(speed-25*dt,-8);else speed*=Math.pow(.94,dt*60);if(keys.a)yaw+=dt*(1.8+Math.abs(speed)*.025)*Math.sign(speed||1);if(keys.d)yaw-=dt*(1.8+Math.abs(speed)*.025)*Math.sign(speed||1);car.position.addScaledVector(forward,speed*dt);car.rotation.y=yaw;document.querySelector('#speed').innerHTML=String(Math.round(Math.abs(speed)*4.1)).padStart(3,'0')+' <em>KM/H</em>'}else{const move=new THREE.Vector3((keys.d?1:0)-(keys.a?1:0),0,(keys.s?1:0)-(keys.w?1:0));if(move.lengthSq()){move.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);player.position.addScaledVector(move,dt*(keys.shift?11:6));player.rotation.y=Math.atan2(move.x,move.z)}if(keys.w||keys.a||keys.s||keys.d){}document.querySelector('#speed').innerHTML='--- <em>ON FOOT</em>'}
+target.position.x=THREE.MathUtils.clamp(target.position.x,-96,96);target.position.z=THREE.MathUtils.clamp(target.position.z,-112,88);
+const dist=(driving?car.position:player.position).distanceTo(marker.position);marker.rotation.y+=dt*.8;marker.children[0].rotation.z+=dt*.5;if(dist<5&&!missionDone){missionDone=true;document.querySelector('#missionTitle').textContent='Marina Explorer';document.querySelector('#missionText').textContent='Checkpoint found! Keep exploring the coastline and discover the city.';toast('MISSION COMPLETE  •  +250 XP')}
+}
+const focus=target.position.clone();focus.y+=1;const orbit=new THREE.Vector3(Math.sin(camYaw)*Math.cos(camPitch),Math.sin(camPitch)+.18,Math.cos(camYaw)*Math.cos(camPitch));const desired=focus.clone().add(orbit.multiplyScalar(driving?12:8));desired.y+=driving?3:2;camera.position.lerp(desired,1-Math.pow(.001,dt));camera.lookAt(focus);updateMap();renderer.render(scene,camera)}
+loop();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script></body></html>
