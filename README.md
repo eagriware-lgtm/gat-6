@@ -1,37 +1,34 @@
 # GAT 6 — Coastline
 
-An original open-world driving and exploration prototype, built as a browser-playable vertical slice.
+An original browser-playable open-world driving and exploration prototype. All story characters, locations and game assets are original.
 
 ## Play
-Serve the repository root with any static web server and open `index.html`. The project loads Three.js 0.160.0 from jsDelivr, so an internet connection is required.
+Serve the repository root with a static web server and open `index.html`. The game loads Three.js 0.160.0 from jsDelivr, so an internet connection is required.
 
 ## Controls
 - **W A S D** — walk / drive
-- **Shift** — sprint / boost
-- **E** — talk to nearby mission NPCs, continue dialogue, or enter / exit the vehicle
-- **Mouse drag** — orbit the gameplay camera
-- **Space** — jump while on foot; skip the opening cinematic while it is playing
+- **Shift** — sprint / vehicle boost
+- **E** — talk, continue dialogue, enter or exit the vehicle
+- **Space** — jump while on foot; skip the opening cinematic
+- **R** — reset the vehicle
+- **Mouse drag** — orbit the camera
 
-## Current build
-- Procedurally assembled coastal city blockout with roads, buildings, palm trees and ocean
-- Third-person on-foot exploration and a drivable vehicle
-- Acceleration, braking, steering and boost
-- Three-stage checkpoint route
-- HUD, speed display and minimap
-- A 10-second multi-shot opening cinematic with letterbox bars, camera moves and title captions
-- A segmented humanoid player model with a head, torso, arms, legs and shoes
-- Two named NPCs, Maya and Leo, with simple idle animation
-- In-world NPC conversations through a dialogue panel (not cinematic cutscenes)
-- A four-stage mission: meet Maya, deliver supplies, check in with Leo, activate the coast signal
-- On-foot jumping with gravity and landing
-- Mission progression stays gameplay-only: NPC dialogue panels, no cinematic mission cutscenes
-- Voice recordings are intentionally not included; the project can add user-recorded dialogue later
+## Current prototype
+- Expanded coastal city blockout with a street grid, building facades, windows, sidewalks, palms, promenade, marina details and ocean
+- Third-person on-foot movement and a drivable coupe
+- Vehicle acceleration, braking, steering, boost, wheel rotation and reset
+- Articulated stylized humanoid player and two named NPCs
+- NPC dialogue panels and a four-part first chapter
+- Find Maya, locate the missing case, speak with Leo, and restore the coast signal
+- Mission markers, objective progress, contextual interaction prompts, minimap and speed HUD
+- Opening city fly-through; mission gameplay remains interactive, with no mission cutscenes
+- Voice recordings are intentionally not included; the developer will provide voice acting
 
-## Visual target and honest scope
-GAT 6 aims for cinematic open-world presentation, but this browser prototype is **not** at the graphical fidelity of Grand Theft Auto VI. Achieving that class of visuals requires a full 3D production pipeline, detailed original assets, character animation, performance capture, lighting and extensive optimisation. This repository is the playable prototype and cinematic foundation, not a finished AAA game.
+## Scope and performance
+This is a procedural browser prototype, not a finished AAA game and not equivalent to Grand Theft Auto VI. The current character and environment models are built from procedural geometry; detailed authored 3D assets, advanced animation, vehicle physics, traffic AI, save systems and extensive optimisation remain future production work. Rendering quality and frame rate depend on the browser and device. The renderer caps pixel ratio to help performance on integrated graphics.
 
 ## Creative direction
-Build an original coastal city game with original characters, places, missions, story and assets. This is a fan-made project and is not affiliated with Rockstar Games. Do not use Rockstar-owned characters, maps, music, logos or game assets.
+GAT 6 is an original coastal-city game prototype. It is fan-made and is not affiliated with Rockstar Games. Do not use Rockstar-owned characters, maps, music, logos or game assets.
 
 ## Technology
 - HTML, CSS and JavaScript modules
