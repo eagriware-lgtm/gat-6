@@ -1,25 +1,32 @@
 # GAT 6 — Coastline
 
-An original browser-based 3D open-world driving and exploration prototype.
+An original open-world driving and exploration prototype, built as a browser-playable vertical slice.
 
-## Run
-Open `index.html` through a local web server. The game imports Three.js from jsDelivr, so an internet connection is required.
+## Play
+Serve the repository root with any static web server and open `index.html`. The project loads Three.js 0.160.0 from jsDelivr, so an internet connection is required.
 
 ## Controls
-- **W A S D** — move / drive
-- **Shift** — sprint / vehicle boost
-- **E** — enter or exit the car when nearby
-- **Mouse drag** — orbit the camera
+- **W A S D** — walk / drive
+- **Shift** — sprint / boost
+- **E** — enter or exit the vehicle when nearby
+- **Mouse drag** — orbit the gameplay camera
+- **Space** — skip the opening cinematic
 
-## Current prototype
-- Procedural coastal city blockout with roads, buildings, palms and ocean
-- Third-person on-foot exploration
-- Drivable vehicle with acceleration, braking, steering and boost
-- Marina checkpoint objective, HUD, minimap and responsive intro screen
+## Current build
+- Procedurally assembled coastal city blockout with roads, buildings, palm trees and ocean
+- Third-person on-foot exploration and a drivable vehicle
+- Acceleration, braking, steering and boost
+- Three-stage checkpoint route
+- HUD, speed display and minimap
+- A 10-second multi-shot opening cinematic with letterbox bars, camera moves and title captions
+- Voice recordings are intentionally not included; the project can add user-recorded dialogue later
 
-## Project direction
-Build an original, family-friendly open-world city game with original locations, characters, missions and art. This project is not affiliated with Rockstar Games and does not use GTA assets.
+## Visual target and honest scope
+GAT 6 aims for cinematic open-world presentation, but this browser prototype is **not** at the graphical fidelity of Grand Theft Auto VI. Achieving that class of visuals requires a full 3D production pipeline, detailed original assets, character animation, performance capture, lighting and extensive optimisation. This repository is the playable prototype and cinematic foundation, not a finished AAA game.
 
-## Tech
+## Creative direction
+Build an original coastal city game with original characters, places, missions, story and assets. This is a fan-made project and is not affiliated with Rockstar Games. Do not use Rockstar-owned characters, maps, music, logos or game assets.
+
+## Technology
 - HTML, CSS and JavaScript modules
 - Three.js 0.160.0 via CDN
