@@ -8,7 +8,7 @@ Serve the repository root with any static web server and open `index.html`. The 
 ## Controls
 - **W A S D** — walk / drive
 - **Shift** — sprint / boost
-- **E** — enter or exit the vehicle when nearby
+- **E** — talk to nearby mission NPCs, continue dialogue, or enter / exit the vehicle
 - **Mouse drag** — orbit the gameplay camera
 - **Space** — jump while on foot; skip the opening cinematic while it is playing
 
@@ -19,8 +19,12 @@ Serve the repository root with any static web server and open `index.html`. The 
 - Three-stage checkpoint route
 - HUD, speed display and minimap
 - A 10-second multi-shot opening cinematic with letterbox bars, camera moves and title captions
+- A segmented humanoid player model with a head, torso, arms, legs and shoes
+- Two named NPCs, Maya and Leo, with simple idle animation
+- In-world NPC conversations through a dialogue panel (not cinematic cutscenes)
+- A four-stage mission: meet Maya, deliver supplies, check in with Leo, activate the coast signal
 - On-foot jumping with gravity and landing
-- Mission checkpoints remain gameplay-only: no cutscenes interrupt mission progress
+- Mission progression stays gameplay-only: NPC dialogue panels, no cinematic mission cutscenes
 - Voice recordings are intentionally not included; the project can add user-recorded dialogue later
 
 ## Visual target and honest scope
