@@ -10,7 +10,7 @@ Serve the repository root with any static web server and open `index.html`. The 
 - **Shift** — sprint / boost
 - **E** — enter or exit the vehicle when nearby
 - **Mouse drag** — orbit the gameplay camera
-- **Space** — skip the opening cinematic
+- **Space** — jump while on foot; skip the opening cinematic while it is playing
 
 ## Current build
 - Procedurally assembled coastal city blockout with roads, buildings, palm trees and ocean
@@ -19,6 +19,8 @@ Serve the repository root with any static web server and open `index.html`. The 
 - Three-stage checkpoint route
 - HUD, speed display and minimap
 - A 10-second multi-shot opening cinematic with letterbox bars, camera moves and title captions
+- On-foot jumping with gravity and landing
+- Mission checkpoints remain gameplay-only: no cutscenes interrupt mission progress
 - Voice recordings are intentionally not included; the project can add user-recorded dialogue later
 
 ## Visual target and honest scope
